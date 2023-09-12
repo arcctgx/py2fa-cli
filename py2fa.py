@@ -3,6 +3,7 @@
 
 import json
 import os
+import stat
 import sys
 from time import time
 
@@ -10,13 +11,29 @@ import pyotp
 from xdg import BaseDirectory
 
 
+def _is_world_accessible(path):
+    return os.stat(path).st_mode & stat.S_IRWXO
+
+
 def _get_config():
     cfg_path = BaseDirectory.load_first_config('py2fa/config.json')
+    if cfg_path is None:
+        print('ERR: Secrets file does not exist!')
+        return None
 
-    with open(cfg_path, encoding='utf-8') as cfg:
-        secrets = json.load(cfg)
+    if _is_world_accessible(cfg_path):
+        print('ERR: Secrets file is world-accessible, change its permissions first.')
+        return None
 
-    return secrets
+    try:
+        with open(cfg_path, encoding='utf-8') as cfg:
+            return json.load(cfg)
+    except PermissionError:
+        print('ERR: Not permitted to access secrets file, verify permissions!')
+        return None
+    except json.JSONDecodeError:
+        print('ERR: Failed to decode secrets file, verify JSON format!')
+        return None
 
 
 def main():
@@ -25,11 +42,14 @@ def main():
         sys.exit(0)
 
     secrets = _get_config()
+    if secrets is None:
+        print('ERR: Failed to load secrets file!')
+        sys.exit(1)
 
     try:
         secret = secrets[sys.argv[1]]
     except KeyError:
-        print(f'No secret for {sys.argv[1]} is available!')
+        print(f'ERR: No secret for {sys.argv[1]} is available!')
         sys.exit(1)
 
     totp = pyotp.TOTP(secret)
