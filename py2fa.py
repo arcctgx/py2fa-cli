@@ -15,8 +15,8 @@ def _is_world_accessible(path):
     return os.stat(path).st_mode & stat.S_IRWXO
 
 
-def _get_config():
-    cfg_path = BaseDirectory.load_first_config('py2fa/config.json')
+def _load_secrets():
+    cfg_path = BaseDirectory.load_first_config('py2fa/secrets.json')
     if cfg_path is None:
         print('ERR: Secrets file does not exist!')
         return None
@@ -41,7 +41,7 @@ def main():
         print(f'usage: {os.path.basename(sys.argv[0])} <secret_name>')
         sys.exit(0)
 
-    secrets = _get_config()
+    secrets = _load_secrets()
     if secrets is None:
         print('ERR: Failed to load secrets file!')
         sys.exit(1)
