@@ -7,7 +7,7 @@ import stat
 import sys
 from time import time
 
-import pyotp
+from pyotp import TOTP
 from xdg import BaseDirectory
 
 
@@ -52,7 +52,7 @@ def main():
         print(f'ERR: No secret for {sys.argv[1]} is available!')
         sys.exit(1)
 
-    totp = pyotp.TOTP(secret)
+    totp = TOTP(secret)
     valid_for = 30.0 - time() % 30
 
     print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
