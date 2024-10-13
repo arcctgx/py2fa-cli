@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Calculate one-time passwords for two-factor authentication."""
 
 import json
