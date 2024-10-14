@@ -9,4 +9,4 @@ wheel:
 	python3 setup.py bdist_wheel
 
 clean:
-	$(RM) -vrf py2fa.egg-info py2fa/__pycache__ build dist
+	$(RM) -vrf py2fa_cli.egg-info py2fa/__pycache__ build dist

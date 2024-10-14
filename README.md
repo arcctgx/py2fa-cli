@@ -1,4 +1,4 @@
-# py2fa
+# py2fa-cli
 
 Calculates and displays time-based one-time passwords (TOTP) for two-factor
 authentication:
@@ -13,14 +13,14 @@ One-time password: 123456 (valid for 13.7 seconds)
 For typical use:
 
 ```sh
-python3 -m pip install py2fa
+python3 -m pip install py2fa-cli
 ```
 
 For development:
 
 ```sh
-git clone https://github.com/arcctgx/py2fa
-cd py2fa
+git clone https://github.com/arcctgx/py2fa-cli
+cd py2fa-cli
 python3 -m pip install --editable .
 ```
 
@@ -29,7 +29,7 @@ python3 -m pip install --editable .
 * `pyotp`
 * `pyxdg`
 
-These dependencies will be installed automatically when `py2fa` is installed
+These dependencies will be installed automatically when `py2fa-cli` is installed
 by `pip`.
 
 ## Configuration
