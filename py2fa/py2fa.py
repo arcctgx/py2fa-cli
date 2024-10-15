@@ -1,5 +1,6 @@
 """Calculate one-time passwords for two-factor authentication."""
 
+import binascii
 import json
 import os
 import stat
@@ -54,7 +55,11 @@ def main():
     totp = TOTP(secret)
     valid_for = 30.0 - time() % 30
 
-    print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
+    try:
+        print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
+    except binascii.Error as err:
+        print(f'ERR: Failed to generate TOTP: {err}. Verify your secret.')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
