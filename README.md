@@ -1,5 +1,8 @@
 # py2fa-cli
 
+[![PyPI version](https://img.shields.io/pypi/v/py2fa-cli?logo=python&label=PyPI)](https://pypi.org/project/py2fa-cli/)
+[![PePy downloads](https://img.shields.io/pepy/dt/py2fa-cli?logo=python&label=Downloads&color=%230C7DBE)](https://pepy.tech/project/py2fa-cli)
+
 Calculates and displays time-based one-time passwords (TOTP) for two-factor
 authentication:
 
