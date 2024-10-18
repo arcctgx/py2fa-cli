@@ -1,5 +1,6 @@
 """Calculate one-time passwords for two-factor authentication."""
 
+import argparse
 import binascii
 import json
 import os
@@ -9,6 +10,8 @@ from time import time
 
 from pyotp import TOTP
 from xdg import BaseDirectory
+
+from py2fa import VERSION
 
 
 def _is_world_accessible(path):
@@ -36,10 +39,18 @@ def _load_secrets():
         return None
 
 
+def _parse_args():
+    parser = argparse.ArgumentParser(
+        description="""Calculate one-time passwords for two-factor authentication.""")
+
+    parser.add_argument('secret_name', help='name of secret to display TOTP code for')
+    parser.add_argument('-v', '--version', action='version', version=VERSION)
+
+    return parser.parse_args()
+
+
 def main():
-    if len(sys.argv) != 2:
-        print(f'usage: {os.path.basename(sys.argv[0])} <secret_name>')
-        sys.exit(0)
+    args = _parse_args()
 
     secrets = _load_secrets()
     if secrets is None:
@@ -47,9 +58,9 @@ def main():
         sys.exit(1)
 
     try:
-        secret = secrets[sys.argv[1]]
+        secret = secrets[args.secret_name]
     except KeyError:
-        print(f'ERR: No secret for {sys.argv[1]} is available!')
+        print(f'ERR: No secret for {args.secret_name} is available!')
         sys.exit(1)
 
     totp = TOTP(secret)
