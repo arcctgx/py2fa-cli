@@ -2,41 +2,13 @@
 
 import argparse
 import binascii
-import json
-import os
-import stat
 import sys
 from time import time
 
 from pyotp import TOTP
-from xdg import BaseDirectory
 
 from py2fa import VERSION
-
-
-def _is_world_accessible(path):
-    return os.stat(path).st_mode & stat.S_IRWXO
-
-
-def _load_secrets():
-    cfg_path = BaseDirectory.load_first_config('py2fa/secrets.json')
-    if cfg_path is None:
-        print('ERR: Secrets file does not exist!')
-        return None
-
-    if _is_world_accessible(cfg_path):
-        print('ERR: Secrets file is world-accessible, change its permissions first.')
-        return None
-
-    try:
-        with open(cfg_path, encoding='utf-8') as cfg:
-            return json.load(cfg)
-    except PermissionError:
-        print('ERR: Not permitted to access secrets file, verify permissions!')
-        return None
-    except json.JSONDecodeError:
-        print('ERR: Failed to decode secrets file, verify JSON format!')
-        return None
+from py2fa.config import load_secrets
 
 
 def _parse_args():
@@ -52,7 +24,7 @@ def _parse_args():
 def main():
     args = _parse_args()
 
-    secrets = _load_secrets()
+    secrets = load_secrets()
     if secrets is None:
         print('ERR: Failed to load secrets file!')
         sys.exit(1)
