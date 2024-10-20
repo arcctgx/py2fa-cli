@@ -1,0 +1,43 @@
+name: Sync mirrors
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+jobs:
+  sync-gitlab:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync GitLab mirror
+        uses: yesolutions/mirror-action@v0.7.0
+        with:
+          REMOTE: 'ssh://git@gitlab.com/arcctgx/py2fa-cli.git'
+          GIT_SSH_PRIVATE_KEY: ${{ secrets.PY2FA_SYNC_PRIVATE_SSH_KEY }}
+          GIT_SSH_NO_VERIFY_HOST: true
+          PUSH_ALL_REFS: false
+
+  sync-codeberg:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync Codeberg mirror
+        uses: yesolutions/mirror-action@v0.7.0
+        with:
+          REMOTE: 'ssh://git@codeberg.org/arcctgx/py2fa-cli.git'
+          GIT_SSH_PRIVATE_KEY: ${{ secrets.PY2FA_SYNC_PRIVATE_SSH_KEY }}
+          GIT_SSH_NO_VERIFY_HOST: true
+          PUSH_ALL_REFS: false
