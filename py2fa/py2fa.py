@@ -33,28 +33,24 @@ def main():
 
     secrets = load_secrets()
     if secrets is None:
-        print('ERR: Failed to load secrets file!')
-        sys.exit(1)
+        sys.exit('ERR: Failed to load secrets file!')
 
     try:
         secret = secrets[args.secret_name]
     except KeyError:
-        print(f'ERR: No secret for {args.secret_name} is available!')
-        sys.exit(1)
+        sys.exit(f'ERR: No secret for {args.secret_name} is available!')
 
     try:
         totp = _make_totp(secret)
     except ValueError as err:
-        print(f'ERR: Failed to create TOTP object: {err}')
-        sys.exit(1)
+        sys.exit(f'ERR: Failed to create TOTP object: {err}')
 
     valid_for = totp.interval - time() % totp.interval
 
     try:
         print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
     except (ValueError, binascii.Error) as err:
-        print(f'ERR: Failed to generate TOTP: {err}. Verify your secret.')
-        sys.exit(1)
+        sys.exit(f'ERR: Failed to generate TOTP: {err}. Verify your secret.')
 
 
 if __name__ == '__main__':
