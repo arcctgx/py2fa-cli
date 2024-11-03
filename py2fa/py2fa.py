@@ -5,7 +5,7 @@ import binascii
 import sys
 from time import time
 
-from pyotp import TOTP
+from pyotp import TOTP, parse_uri
 
 from py2fa import VERSION
 from py2fa.config import load_secrets
@@ -19,6 +19,13 @@ def _parse_args():
     parser.add_argument('-v', '--version', action='version', version=VERSION)
 
     return parser.parse_args()
+
+
+def _make_totp(secret):
+    if secret.startswith('otpauth://totp/'):
+        return parse_uri(secret)
+
+    return TOTP(secret)
 
 
 def main():
@@ -35,12 +42,17 @@ def main():
         print(f'ERR: No secret for {args.secret_name} is available!')
         sys.exit(1)
 
-    totp = TOTP(secret)
+    try:
+        totp = _make_totp(secret)
+    except ValueError as err:
+        print(f'ERR: Failed to create TOTP object: {err}')
+        sys.exit(1)
+
     valid_for = totp.interval - time() % totp.interval
 
     try:
         print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
-    except binascii.Error as err:
+    except (ValueError, binascii.Error) as err:
         print(f'ERR: Failed to generate TOTP: {err}. Verify your secret.')
         sys.exit(1)
 
