@@ -36,7 +36,7 @@ def main():
         sys.exit(1)
 
     totp = TOTP(secret)
-    valid_for = 30.0 - time() % 30
+    valid_for = totp.interval - time() % totp.interval
 
     try:
         print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
