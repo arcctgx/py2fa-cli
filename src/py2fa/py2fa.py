@@ -28,6 +28,10 @@ def _make_totp(secret):
     return TOTP(secret)
 
 
+def _green(text):
+    return f'\033[92m{text}\033[00m'
+
+
 def main():
     args = _parse_args()
 
@@ -48,7 +52,7 @@ def main():
     valid_for = totp.interval - time() % totp.interval
 
     try:
-        print(f'One-time password: {totp.now()} (valid for {valid_for:.1f} seconds)')
+        print(f'One-time password: {_green(totp.now())} (valid for {valid_for:.1f} seconds)')
     except (ValueError, binascii.Error) as err:
         sys.exit(f'ERR: Failed to generate TOTP: {err}. Verify your secret.')
 
