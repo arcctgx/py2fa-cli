@@ -34,7 +34,7 @@ Issues = "https://github.com/arcctgx/py2fa-cli/issues"
 version = { attr = "py2fa.VERSION" }
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 
 [tool.pylint.basic]
 # Do not require docstrings for functions whose names begin with

@@ -9,4 +9,4 @@ wheel:
 	python3 -m build --wheel
 
 clean:
-	$(RM) -vrf py2fa_cli.egg-info py2fa/__pycache__ build dist
+	$(RM) -vrf src/py2fa_cli.egg-info src/py2fa/__pycache__ build dist
